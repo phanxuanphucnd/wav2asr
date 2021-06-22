@@ -65,6 +65,28 @@ def pretraining(audio_path: str, init_model: str, batch_size: int):
     os.system(cmd)
 
 
+@click.command()
+@click.option('--transcription_path', required=True,
+              default=None, type=str,
+              help='Path to the description file.')
+@click.option('--pretrain_model', required=True,
+              default=None, type=str,
+              help='The name of pretrained model or path to the pretrained Wav2vec model.')
+@click.option('--bach_size', required=False,
+              default=2800000, type=int,
+              help='Batch size, try decrease this number if any CUDA memory problems occurs.')
+@click.option('--pct', required=False,
+              default=0.05, type=float,
+              help='Percentage of data use for validation.')
+@click.option('--restore_file', required=False,
+              default=None, type=str,
+              help='Resume training from fine-tuned checkpoint.')
+def fine_tuning(transcript_path: str, pretrain_model: str, batch_size: int, pct: float, restore_file):
+    
+    pretrain_model = os.path.abspath(pretrain_model)
+    
+
+
 
 # Command: pretraining
 entry_point.add_command(pretraining)
