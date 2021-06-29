@@ -4,8 +4,10 @@ import os
 import sys
 import click
 import torch
+import soundfile
 import multiprocessing
 
+from arizona_asr.utils.gen_dict import gen_dict
 from arizona_asr.utils.print_utils import print_name
 
 @click.group()
@@ -66,7 +68,7 @@ def pretraining(audio_path: str, init_model: str, batch_size: int):
 
 
 @click.command()
-@click.option('--transcription_path', required=True,
+@click.option('--transcript_file', required=True,
               default=None, type=str,
               help='Path to the description file.')
 @click.option('--pretrain_model', required=True,
@@ -81,11 +83,30 @@ def pretraining(audio_path: str, init_model: str, batch_size: int):
 @click.option('--restore_file', required=False,
               default=None, type=str,
               help='Resume training from fine-tuned checkpoint.')
-def fine_tuning(transcript_path: str, pretrain_model: str, batch_size: int, pct: float, restore_file):
+def fine_tuning(transcript_file: str, pretrain_model: str, batch_size: int, pct: float, restore_file):
     
     pretrain_model = os.path.abspath(pretrain_model)
-    
+    save_dir = os.path.abspath('./.denver/manifest')
+    if not os.path.exists(save_dir):
+        os.makedirs(save_dir)
 
+    # Generate dictionary from transcript_file
+    gen_dict(transcript_path=transcript_file, save_dir=save_dir)
+    # Pretrain the model
+    NUM_GPU = torch.cuda.device_count()
+    NUM_CPU = multiprocessing.cpu_count()
+
+    if NUM_GPU == 0:
+        print(f"Pytorch cannot find any GPUs !!")
+        sys.exit(0)
+
+    # Create manifest files
+    train_words = os.path.join(save_dir, 'train.wrd')
+    valid_words = os.path.join(save_dir, 'valid.wrd')
+    train_letters = os.path.join(save_dir, 'train.ltr')
+    valid_letters = os.path.join(save_dir, 'valid.ltr')
+    train_map = os.path.join(save_dir, 'train.tsv')
+    valid_map = os.path.join(save_dir, )
 
 
 # Command: pretraining

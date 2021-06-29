@@ -3,13 +3,13 @@
 import os
 from collections import Counter
 
-def gen_dict(transcript_path: str=None, save_dir: str='./.denver/asr/'):
+def gen_dict(transcript_file: str=None, save_dir: str=None):
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
 
     dictionary = os.path.join(save_dir, 'dict.ltr.txt')
     
-    with open(transcript_path, encoding='utf-8') as f:
+    with open(transcript_file, encoding='utf-8') as f:
         data = f.read().splitlines()
     
     words = [d.split('\t')[1].upper() for d in data]
