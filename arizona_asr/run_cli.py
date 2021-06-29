@@ -7,6 +7,9 @@ import torch
 import soundfile
 import multiprocessing
 
+from tqdm import tqdm
+from sklearn.utils import shuffle
+
 from arizona_asr.utils.gen_dict import gen_dict
 from arizona_asr.utils.print_utils import print_name
 
@@ -62,8 +65,8 @@ def pretraining(audio_path: str, init_model: str, batch_size: int):
     cmd.append("--config-dir config/pretraining")
     cmd.append("--config-name wav2vec2_base_librispeech")
     cmd = ' '.join(cmd)
-
     print(f"Execute: {cmd}")
+
     os.system(cmd)
 
 
@@ -80,13 +83,23 @@ def pretraining(audio_path: str, init_model: str, batch_size: int):
 @click.option('--pct', required=False,
               default=0.05, type=float,
               help='Percentage of data use for validation.')
+@click.option('--seed', required=False,
+              default=123, type=int,
+              help="The number of random seed state.")
 @click.option('--restore_file', required=False,
               default=None, type=str,
               help='Resume training from fine-tuned checkpoint.')
-def fine_tuning(transcript_file: str, pretrain_model: str, batch_size: int, pct: float, restore_file):
+def fine_tuning(
+    transcript_file: str,
+    pretrain_model: str,
+    batch_size: int,
+    pct: float,
+    seed: int,
+    restore_file
+):
     
     pretrain_model = os.path.abspath(pretrain_model)
-    save_dir = os.path.abspath('./.denver/manifest')
+    save_dir = os.path.abspath('./.manifest')
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
 
@@ -106,11 +119,102 @@ def fine_tuning(transcript_file: str, pretrain_model: str, batch_size: int, pct:
     train_letters = os.path.join(save_dir, 'train.ltr')
     valid_letters = os.path.join(save_dir, 'valid.ltr')
     train_map = os.path.join(save_dir, 'train.tsv')
-    valid_map = os.path.join(save_dir, )
+    valid_map = os.path.join(save_dir, 'valid.tsv')
+
+    with open(transcript_file) as f:
+        data = f.read().splitlines()
+
+    words = [d.split('\t')[1].upper() for d in data]
+    letters = [d.replace(' ', '|') for d in words]
+    letters = [' '.join(list(d)) + ' |' for d in letters]
+
+    paths = [d.split('\t')[0] for d in data]
+    total_duration = 0
+
+    for i in tqdm(range(0, len(paths))):
+        audio_info = soundfile.info(paths[i])
+        frames = audio_info.frames
+        total_duration += audio_info.duration
+        paths[i] = paths[i] + '\t' + str(frames)
+
+    SPLIT_NUM = int(len(words)) * (1 - pct)
+    words, letters, paths = shuffle(words, letters, paths, random_state=seed)
+
+    train_w, valid_w = words[:SPLIT_NUM], words[SPLIT_NUM:]
+    train_l, valid_l = letters[:SPLIT_NUM], letters[SPLIT_NUM:]
+    train_p, valid_p = paths[:SPLIT_NUM], paths[SPLIT_NUM:]
+
+    with open(train_words,'w') as f:
+        f.write('\n'.join(train_w))
+        
+    with open(valid_words,'w') as f:
+        f.write('\n'.join(valid_w))
+    
+    with open(train_letters,'w') as f:
+        f.write('\n'.join(train_l))
+        
+    with open(valid_letters,'w') as f:
+        f.write('\n'.join(valid_l))
+        
+    with open(train_map,'w') as f:
+        f.write('\n')
+        f.write('\n'.join(train_p))
+    
+    with open(valid_map,'w') as f:
+        f.write('\n')
+        f.write('\n'.join(valid_p))
+
+    if total_duration <= 5:
+        config_name = "base_1h"
+    elif total_duration <= 50:
+        config_name = "base_10h"
+    elif total_duration <= 500:
+        config_name = "base_100h"
+    else:
+        config_name = "base_960h"
+
+    cmd = ["fairseq-hydra-train"]
+    cmd.append("task.data=" + str(save_dir))
+    cmd.append("distributed_training.distributed_world_size=" + str(NUM_GPU))
+    cmd.append("+optimization.update_freq='[" + str(int(24/NUM_GPU)) + "]'")
+    cmd.append("model.w2v_path=" + pretrain_model)
+    cmd.append("dataset.num_workers=" + str(NUM_CPU))
+    cmd.append("dataset.max_tokens=" + str(batch_size))
+
+    if restore_file is not None:
+        cmd.append("checkpoint.restore_file=" + restore_file)
+        #cmd.append("checkpoint.reset_optimizer=True")
+        #cmd.append("checkpoint.reset_lr_scheduler=True")
+        #cmd.append("checkpoint.reset_dataloader=True")
+        #cmd.append("checkpoint.reset_meters=True")
+    
+    #cmd.append("optimization.max_update=100000")
+    #cmd.append("dataset.validate_after_updates=0")
+    #cmd.append("model.freeze_finetune_updates=0")
+    cmd.append("--config-dir config/finetuning")
+    cmd.append("--config-name " + config_name)
+    cmd = ' '.join(cmd)
+    print(f"Execute: {cmd}")
+
+    os.system(cmd)
+
+@click.command()
+@click.option('--transcript_file', required=True,
+              default=None, type=str,
+              help='Path to the description file.')
+def train_lm(transcript_file: str):
+
+    raise NotImplementedError
 
 
 # Command: pretraining
 entry_point.add_command(pretraining)
+
+# Command: finetuning
+entry_point.add_command(fine_tuning)
+
+# Command: train_lm
+entry_point.add_command(train_lm)
 
 
 if __name__ == '__main__':
