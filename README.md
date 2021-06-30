@@ -100,35 +100,35 @@ data
 
 ```
 
-**- Transcript file:**
+- Transcript file:
 
-- One trainng sample per line with format:
+    - One trainng sample per line with format:
 
-```
-audio_absolute_path \tab transcript
-```
+    ```
+    audio_absolute_path \tab transcript
+    ```
 
-- Examples of a transcript file:
+    - Examples of a transcript file:
 
-```
+    ```
 
-/path/to/1.wav AND IT WAS A MATTER OF COURSE THAT IN THE MIDDLE AGES WHEN THE CRAFTSMEN
-/path/to/2.wav AND WAS IN FACT THE KIND OF LETTER USED IN THE MANY SPLENDID MISSALS PSALTERS PRODUCED BY PRINTING IN THE FIFTEENTH CENTURY
-/path/to/3.wav JOHN OF SPIRES AND HIS BROTHER VINDELIN FOLLOWED BY NICHOLAS JENSON BEGAN TO PRINT IN THAT CITY
-/path/to/4.wav BEING THIN TOUGH AND OPAQUE
+    /path/to/1.wav AND IT WAS A MATTER OF COURSE THAT IN THE MIDDLE AGES WHEN THE CRAFTSMEN
+    /path/to/2.wav AND WAS IN FACT THE KIND OF LETTER USED IN THE MANY SPLENDID MISSALS PSALTERS PRODUCED BY PRINTING IN THE FIFTEENTH CENTURY
+    /path/to/3.wav JOHN OF SPIRES AND HIS BROTHER VINDELIN FOLLOWED BY NICHOLAS JENSON BEGAN TO PRINT IN THAT CITY
+    /path/to/4.wav BEING THIN TOUGH AND OPAQUE
 
-```
+    ```
 
-NOTE:
-- One sample per line
-- Upper case
-- All numbers should be transformed into verbal form
-- All special characters (eg. punctuation) should be removed. The final text should contain words only
-- Words in a sentence must be separated by whitespace character
-- Labeled audio file:
-    - Format: wav, PCM 16 bit, single channel, Sampling_rate: 16000.
-    - Silence should be removed from the audio.
-    - Also, each audio should contain only one person speaking.
+    NOTE:
+    - One sample per line
+    - Upper case
+    - All numbers should be transformed into verbal form
+    - All special characters (eg. punctuation) should be removed. The final text should contain words only
+    - Words in a sentence must be separated by whitespace character
+    - Labeled audio file:
+        - Format: wav, PCM 16 bit, single channel, Sampling_rate: 16000.
+        - Silence should be removed from the audio.
+        - Also, each audio should contain only one person speaking.
 
 ### Examples usage <a name='usage'></a>
 
