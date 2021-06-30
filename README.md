@@ -22,7 +22,7 @@ Transfer learning is still the main technique:
 
 ## <a name='how_to_use'></a> How to use `arizona_asr`
 
-### Installation <a name='installation></a>
+### Installation <a name='installation'></a>
 
 - Install dependencies ``fairseq`` and ``wav2letter``:
 
