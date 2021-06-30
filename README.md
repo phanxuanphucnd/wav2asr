@@ -154,7 +154,7 @@ Optional-arguments:
 
 NOTE:
 
-- init_model: The library provide somes optionals ['wav2vec_small_en', 'wav2vec_small_vi'].
+- init_model: The library provide somes optionals [`'wav2vec_small_en'`, `'wav2vec_small_vi'`].
 - Logs and checkpoints will be stored at outputs directory.
 - Log_file path: outputs/date_time/exp_id/hydra_train.log. You should check the loss value to decide when to stop the training process.
 - Best_checkpoint path: outputs/date_time/exp_id/checkpoints/checkpoint_best.pt.
