@@ -138,7 +138,17 @@ data
 
 ```js
 
-arizona_asr pretraining --audio_path path/to/audio_directory --init_model wav2vec_small
+>>> arizona_asr pretraining --audio_path path/to/audio_directory --init_model wav2vec_small
+
+Arguments:
+
+Required-arguments:
+    --audio_path AUDIO_PATH         Path to the unlabeled audio data.
+    --init_model INIT_MODEL         The name of pretrained model or path to the pretrain wav2vec model.
+
+Optional-arguments:
+    --batch_size                    Batch size, try to decrease this number if any CUDA memory problems occur.
+    --help, -h                      Show this help message and exit.
 
 ```
 
@@ -150,6 +160,14 @@ Where:
 Logs and checkpoints will be stored at outputs directory.\
 Log_file path: outputs/date_time/exp_id/hydra_train.log. You should check the loss value to decide when to stop the training process.\
 Best_checkpoint path: outputs/date_time/exp_id/checkpoints/checkpoint_best.pt.
+
+- Finetuning from labeled-data:
+
+```js
+
+>>> arizona_asr finetuning --audio_path path/to/audio_directory --pretrain_model path/to/pretrain_checkpoint_best.pt 
+
+```
 
 
 ## <a name='reference'></a> Reference
