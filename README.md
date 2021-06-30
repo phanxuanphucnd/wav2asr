@@ -102,9 +102,13 @@ data
 
 **- Transcript file:**
 
-- One trainng sample per line with format "audio_absolute_path \tab transcript"
+- One trainng sample per line with format:
 
-Examples of a transcript file:
+```
+audio_absolute_path \tab transcript
+```
+
+`Examples of a transcript file:`
 
 ```
 
