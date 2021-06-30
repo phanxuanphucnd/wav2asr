@@ -108,7 +108,7 @@ data
 audio_absolute_path \tab transcript
 ```
 
-`Examples of a transcript file:`
+- Examples of a transcript file:
 
 ```
 
