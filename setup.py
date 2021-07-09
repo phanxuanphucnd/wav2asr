@@ -1,7 +1,7 @@
 import os
 from setuptools import setup, find_packages
 
-from arizona_asr.version import __version__
+from arizona.version import __version__
 
 try:
     # pip >=20
@@ -32,7 +32,7 @@ except:
 VERSION = os.getenv('PACKAGE_VERSION', __version__)[1:]
 
 setup(
-    name='arizona_asr',
+    name='arizona',
     version=VERSION,
     description='Arizona-ASR is a toolbox for Automatic speech recognition.',
     long_description=open("README.md", "r", encoding="utf-8").read(),
@@ -51,7 +51,7 @@ setup(
     py_modules=['arizona_asr'],
     entry_points={
         'console_scripts': [
-            'arizona_asr = arizona_asr.run_cli:entry_point'
+            'arizona = arizona.run_cli:entry_point'
         ]
     },
 )

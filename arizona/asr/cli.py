@@ -10,9 +10,9 @@ import multiprocessing
 from tqdm import tqdm
 from sklearn.utils import shuffle
 
-from arizona_asr.utils.gen_dict import gen_dict
-from arizona_asr.utils.print_utils import print_name
-from arizona_asr.utils.misc_utils import download_url
+from arizona.utils.gen_dict import gen_dict
+from arizona.utils.print_utils import print_name
+from arizona.utils.misc_utils import download_url
 
 INIT_MODEL_MAPPING = {
     'wav2vec-base-en': 'https://dl.fbaipublicfiles.com/fairseq/wav2vec/wav2vec_small.pt',
@@ -20,13 +20,10 @@ INIT_MODEL_MAPPING = {
 }
 
 @click.group()
-def entry_point():
+def asr():
     print_name()
     pass
 
-@click.group()
-def asr():
-    pass
 
 @asr.command()
 @click.option('--audio_path', required=True,
@@ -219,7 +216,7 @@ def finetuning(
 
     os.system(cmd)
 
-@click.command()
+@asr.command()
 @click.option('--transcript_file', required=True,
               default=None, type=str,
               help='Path to the description file.')
@@ -227,8 +224,6 @@ def train_lm(transcript_file: str):
 
     raise NotImplementedError
 
-
-entry_point.add_command(asr)
 
 # Command: pretraining
 asr.add_command(pretraining)
@@ -239,6 +234,5 @@ asr.add_command(finetuning)
 # Command: train_lm
 asr.add_command(train_lm)
 
-
 if __name__ == '__main__':
-    entry_point()
+    asr()

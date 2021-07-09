@@ -138,7 +138,7 @@ data
 
 ```js
 
->>> arizona_asr pretraining --audio_path path/to/audio_directory --init_model wav2vec_small
+>>> arizona asr pretraining --audio_path path/to/audio_directory --init_model wav2vec_small
 
 Arguments:
 
@@ -162,7 +162,7 @@ NOTE:
 
 ```js
 
->>> arizona_asr finetuning --audio_path path/to/audio_directory --pretrain_model path/to/pretrain_checkpoint_best.pt
+>>> arizona asr finetuning --audio_path path/to/audio_directory --pretrain_model path/to/pretrain_checkpoint_best.pt
 
 Arguments:
 
