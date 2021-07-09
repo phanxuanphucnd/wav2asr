@@ -12,6 +12,12 @@ from sklearn.utils import shuffle
 
 from arizona_asr.utils.gen_dict import gen_dict
 from arizona_asr.utils.print_utils import print_name
+from arizona_asr.utils.misc_utils import download_url
+
+INIT_MODEL_MAPPING = {
+    'wav2vec-base-en': 'https://dl.fbaipublicfiles.com/fairseq/wav2vec/wav2vec_small.pt',
+    'wav2vec-large-en': 'https://dl.fbaipublicfiles.com/fairseq/wav2vec/libri960_big.pt'
+}
 
 @click.group()
 def entry_point():
@@ -23,8 +29,8 @@ def entry_point():
               type=str, default=None,
               help='Path to the unlabeled audio data.')
 @click.option('--init_model', required=True,
-              type=str, default=None,
-              help="The name of pretrained model or path to the pretrain wav2vec model.")
+              type=str, default='wav2vec-base-en',
+              help='The name of pretrained model or path to the pretrain wav2vec model.')
 @click.option('--batch_size', required=False,
               type=int, default=1200000,
               help='Batch size, try to decrease this number if any CUDA memory problems occur.')
@@ -52,12 +58,23 @@ def pretraining(audio_path: str, init_model: str, batch_size: int):
     cmd.append("distributed_training.distributed_world_size=" + str(NUM_GPU))
     cmd.append("+optimization.update_freq='[" + str(int(64 / NUM_GPU)) + "]'")
 
+    if init_model in INIT_MODEL_MAPPING:
+        url = INIT_MODEL_MAPPING.get(init_model.lower())
+        file_name = init_model + '.pt'
+        dest = './.denver/'
+        download_url(url=url, dest=dest,name=file_name)
+        init_model_path = os.path.abspath(dest + file_name)
+    else:
+        init_model_path = os.path.abspath(init_model)
+
     if init_model != None:
-        cmd.append("checkpoint.restore_file=" + os.path.abspath(init_model))
+        cmd.append("checkpoint.restore_file=" + init_model_path)
         cmd.append("checkpoint.reset_optimizer=True")
         cmd.append("checkpoint.reset_lr_scheduler=True")
         cmd.append("checkpoint.reset_dataloader=True")
         cmd.append("checkpoint.reset_meters=True")
+    else:
+        print(f"Warning: `init_model` is None!")
 
     #cmd.append("optimization.max_update=2000000")
     cmd.append("dataset.num_workers=" + str(NUM_CPU))
@@ -65,7 +82,7 @@ def pretraining(audio_path: str, init_model: str, batch_size: int):
     cmd.append("--config-dir config/pretraining")
     cmd.append("--config-name wav2vec2_base_librispeech")
     cmd = ' '.join(cmd)
-    print(f"Execute: {cmd}")
+    print(f"\nExecute: {cmd}")
 
     os.system(cmd)
 
@@ -194,7 +211,7 @@ def fine_tuning(
     cmd.append("--config-dir config/finetuning")
     cmd.append("--config-name " + config_name)
     cmd = ' '.join(cmd)
-    print(f"Execute: {cmd}")
+    print(f"\nExecute: {cmd}")
 
     os.system(cmd)
 
