@@ -155,7 +155,7 @@ def finetuning(
         total_duration += audio_info.duration
         paths[i] = paths[i] + '\t' + str(frames)
 
-    SPLIT_NUM = int(len(words)) * (1 - pct)
+    SPLIT_NUM = int(len(words) * (1 - pct))
     words, letters, paths = shuffle(words, letters, paths, random_state=seed)
 
     train_w, valid_w = words[:SPLIT_NUM], words[SPLIT_NUM:]

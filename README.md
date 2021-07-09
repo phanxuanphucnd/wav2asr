@@ -138,7 +138,7 @@ data
 
 ```js
 
->>> arizona asr pretraining --audio_path path/to/audio_directory --init_model wav2vec_small
+>>> arizona asr pretraining --audio_path path/to/audio_directory --init_model wav2vec-small-en
 
 Arguments:
 
