@@ -1,4 +1,5 @@
 click
 torch~=1.7.1
+torchaudio~=0.7.2
 soundfile
 progressbar
