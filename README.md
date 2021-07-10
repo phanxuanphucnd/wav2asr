@@ -1,7 +1,7 @@
 ## Table of contents
 
 1. [Introduction](#introduction)
-2. [How to use `arizona_asr`](#how_to_use)
+2. [How to use `arizona asr`](#how_to_use)
     - [Installation](#installation)
     - [Data structure](#data_structure)
     - [Example usage](#usage)
@@ -21,7 +21,7 @@ Transfer learning is still the main technique:
 <img src="./docs/imgs/wav2vec_asr.png" alt="drawing" width="600"/>
 
 
-## <a name='how_to_use'></a> How to use `arizona_asr`
+## <a name='how_to_use'></a> How to use `arizona asr`
 
 ### Installation <a name='installation'></a>
 
@@ -69,13 +69,13 @@ Note: path_to_libs_kenlm: is the path to the folder kenlm cloned above.
 ```
 
 
-- Install ``arizona_asr`` library:
+- Install ``arizona asr`` library:
 
 ```js
 
 >>> python setup.py bdist_wheel
 
->>> pip install dist/arizona_asr-0.0.1-py3-none-any.whl 
+>>> pip install dist/arizona-0.0.1-py3-none-any.whl 
 
 ```
 
