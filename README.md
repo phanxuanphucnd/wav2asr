@@ -213,7 +213,7 @@ Required-arguments:
     --output_path OUTPUT_PATH           Path to storage LM model and the lexicon file.
 
 Optional-arguments:
-    --kenlm KENLM_PATH                  Path to the installed kenlm library (default='./kenlm).
+    --kenlm KENLM_PATH                  Path to the installed kenlm library (default='./kenlm').
     --additional_file ADDITIONAL_FILE   Path to the text corpus.
     --ngram N_GRAM                      N gram (default=3).
     --help, -h                          Show this help message and exit.
