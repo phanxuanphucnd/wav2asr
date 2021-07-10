@@ -505,5 +505,5 @@ class Wav2AsrLearner:
         hypos = [h[0] for h in hypos] 
         
         os.system('rm -rf ' + process_dir)
+        
         return hypos
-
