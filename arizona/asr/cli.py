@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-from posixpath import abspath
 import sys
-from typing_extensions import Required
 import click
 import torch
 import soundfile
@@ -273,9 +271,9 @@ def train_lm(
     train_text_path_train = train_text_path.replace('word_lm_data.train', 'kenlm.train')
     model_arpa = train_text_path.replace('word_lm_data.train', 'kenlm.arpa')
     model_bin = train_text_path.replace('word_lm_data.train', 'lm.bin')
-    kenlm_path_train = os.path.join(abspath(kenlm), 'build/bin/lmplz')
-    kenlm_path_convert = os.path.join(abspath(kenlm), 'build/bin/build_binary')
-    kenlm_path_query = os.path.join(abspath(kenlm), 'build/bin/query')
+    kenlm_path_train = os.path.join(os.path.abspath(kenlm), 'build/bin/lmplz')
+    kenlm_path_convert = os.path.join(os.path.abspath(kenlm), 'build/bin/build_binary')
+    kenlm_path_query = os.path.join(os.path.abspath(kenlm), 'build/bin/query')
 
     with open(train_text_path, 'w') as f:
         f.write('\n'.join(train))

@@ -220,6 +220,14 @@ Optional-arguments:
 
 ```
 
+**- Inferene a given utterance:**
+
+```js
+
+
+
+```
+
 
 ## <a name='reference'></a> Reference
 
