@@ -101,7 +101,7 @@ data
 
 ```
 
-- Transcript file:
+- **Transcript file:**
 
     - One trainng sample per line with format:
 
@@ -131,6 +131,28 @@ data
         - Silence should be removed from the audio.
         - Also, each audio should contain only one person speaking.
 
+- **Text corpus:**
+
+    - Collect all texts and put them all together in a single file.
+    
+    - Text file format:
+        - One sentence per line
+        - Upper case
+        - All numbers should be transformed into verbal form.
+        - All special characters (eg. punctuation) should be removed. The final text should contain words only Words in a sentence must be separated by whitespace character
+
+    - Examples of a text corpus:
+
+    ```
+
+    AND IT WAS A MATTER OF COURSE THAT IN THE MIDDLE AGES WHEN THE CRAFTSMEN
+    AND WAS IN FACT THE KIND OF LETTER USED IN THE MANY SPLENDID MISSALS PSALTERS PRODUCED BY PRINTING IN THE FIFTEENTH CENTURY
+    JOHN OF SPIRES AND HIS BROTHER VINDELIN FOLLOWED BY NICHOLAS JENSON BEGAN TO PRINT IN THAT CITY
+    BEING THIN TOUGH AND OPAQUE
+    ...
+
+    ```
+
 ### Examples usage <a name='usage'></a>
 
 **- Pretraining from unlabel-data:**
@@ -152,7 +174,7 @@ Optional-arguments:
 ```
 
 NOTE:
-- init_model: The library provide somes optionals [`'wav2vec_small_en'`, `'wav2vec_small_vi'`].
+- init_model: The library provide somes optionals [`'wav2vec-small-en'`, `'wav2vec-small-vi'`].
 - Logs and checkpoints will be stored at outputs directory.
 - Log_file path: `outputs/date_time/exp_id/hydra_train.log`. You should check the loss value to decide when to stop the training process.
 - Best_checkpoint path: `outputs/date_time/exp_id/checkpoints/checkpoint_best.pt`.
@@ -166,12 +188,35 @@ NOTE:
 Arguments:
 
 Required-arguments:
-    --audio_path AUDIO_PATH         Path to the unlabeled audio data.
-    --init_model INIT_MODEL         The name of pretrained model or path to the pretrain wav2vec model.
+    --transcript_file TRANSCRIPT_FILE       Path to the transcript file.
+    --pretrain_model PRETRAIN_MODEL_PATH    The name of pretrained model or path to the pretrained Wav2vec model.
 
 Optional-arguments:
-    --batch_size                    Batch size, try to decrease this number if any CUDA memory problems occur.
-    --help, -h                      Show this help message and exit.
+    --batch_size BATCH_SIZE                 Batch size, try to decrease this number if any CUDA memory problems occur.
+    --pct PCT                               Percentage of data use for validation.
+    --seed SEED                             The number of random seed state.
+    --restore_file RESTORE_FILE             Resume training from fine-tuned checkpoint.
+    --help, -h                              Show this help message and exit.
+
+```
+
+**- Train a Language model:**
+
+```js
+
+>>> arizona asr train-lm --kenlm path/to/libs/kenlm --transcript_file path/to/transcript.txt --additional_file path/to/text_corpus.txt --ngram 3 --output_path ./lm
+
+Arguments:
+
+Required-arguments:
+    --transcript_file TRANSCRIPT_FILE   Path to the transcript file.
+    --output_path OUTPUT_PATH           Path to storage LM model and the lexicon file.
+
+Optional-arguments:
+    --kenlm KENLM_PATH                  Path to the installed kenlm library (default='./kenlm).
+    --additional_file ADDITIONAL_FILE   Path to the text corpus.
+    --ngram N_GRAM                      N gram (default=3).
+    --help, -h                          Show this help message and exit.
 
 ```
 
