@@ -247,6 +247,16 @@ print(hypos)
 
 ```
 
+NOTE: 
+- If you running inference in a juyter notebook. Please add these lines above the inference script:
+
+    ```py
+
+    import sys
+    sys.argv = ['']
+
+    ```
+
 
 ## <a name='reference'></a> Reference
 
