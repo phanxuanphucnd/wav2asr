@@ -11,8 +11,7 @@
 
 ## <a name='introduction'></a> Introduction
 
-A library version wrapped wav2vec 2.0 framework for Automatic Speech Recognition task, which attempts to build a accurate speech recognition models 
-with small amount of transcribed data. (eg. 1 hour).
+A `simple`, `easy-to-use` toolbox version wrapped wav2vec 2.0 framework for Automatic Speech Recognition task, which attempts to build a accurate speech recognition models with small amount of transcribed data. (eg. 1 hour).
 
 Transfer learning is still the main technique:
 
