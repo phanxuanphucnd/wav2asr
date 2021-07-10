@@ -11,7 +11,7 @@
 
 ## <a name='introduction'></a> Introduction
 
-A `simple`, `easy-to-use` toolbox version wrapped wav2vec 2.0 framework for Automatic Speech Recognition task, which attempts to build a accurate speech recognition models with small amount of transcribed data. (eg. 1 hour).
+A `simple`, `easy-to-use` toolbox version wrapped wav2vec 2.0 framework for **Automatic Speech Recognition (ASR)** task, which attempts to build a accurate speech recognition models with small amount of transcribed data. (eg. 1 hour).
 
 Transfer learning is still the main technique:
 
@@ -212,5 +212,8 @@ SOFTWARE.
   
 ## Author
 
-- Name : Phan Xuan Phuc
-- Email: phanxuanphucnd@gmail.com
+`Arizona asr` was developed by Phuc Phan © Copyright 2021.
+
+For any questions or comments, please contact the following email: phanxuanphucnd@gmail.com
+
+Thank you for your interesting to Denver!
