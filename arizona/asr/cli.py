@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import os
+from posixpath import abspath
 import sys
+from typing_extensions import Required
 import click
 import torch
 import soundfile
@@ -220,9 +222,90 @@ def finetuning(
 @click.option('--transcript_file', required=True,
               default=None, type=str,
               help='Path to the description file.')
-def train_lm(transcript_file: str):
+@click.option('--kenlm', required=False,
+              default='./kenlm', type=str,
+              help="Path to kenlm library.")
+@click.option('--additional_file', required=False,
+              default=None, type=str,
+              help="Path to text file.")
+@click.option('--ngram', required=False,
+              default=3, type=int,
+              help="N-gram.")
+@click.option('--output_path', required=True,
+              default=None, type=str,
+              help="Output path to storing model.")
+def train_lm(
+    transcript_file: str=None,
+    kenlm: str=None,
+    additional_file: str=None,
+    ngram: int=3,
+    output_path: str=None
+):
+    # Create output_path if not exists
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
+    
+    with open(transcript_file, encoding='utf-8') as f:
+        train = f.read().upper().splitlines()
+        train = [d.split('\t')[1] for d in train]
 
-    raise NotImplementedError
+    chars = [list(d.replace(' ', '')) for d in train]
+    chars = [j for i in chars for j in i]
+    chars = set(chars)
+
+    if additional_file != None:
+        with open(additional_file, encoding='utf-8') as f:
+            train += f.read().upper().splitlines()
+    
+    vocabs = set([])
+    for line in tqdm(train):
+        for word in line.split():
+            vocabs.add(word)
+
+    vocabs = list(vocabs)
+    print(f"Length of vocabs: {len(vocabs)}")
+    vocabs = [v for v in vocabs if not any(c for c in list(v) if c not in chars)]
+    print(f"Length of vocabs: {len(vocabs)}")
+
+    vocab_path = os.path.join(output_path, 'vocabs.txt')
+    lexicon_path = os.path.join(output_path, 'lexicon.txt')
+    train_text_path = os.path.join(output_path, 'word_lm_data.train')
+    train_text_path_train = train_text_path.replace('word_lm_data.train', 'kenlm.train')
+    model_arpa = train_text_path.replace('word_lm_data.train', 'kenlm.arpa')
+    model_bin = train_text_path.replace('word_lm_data.train', 'lm.bin')
+    kenlm_path_train = os.path.join(abspath(kenlm), 'build/bin/lmplz')
+    kenlm_path_convert = os.path.join(abspath(kenlm), 'build/bin/build_binary')
+    kenlm_path_query = os.path.join(abspath(kenlm), 'build/bin/query')
+
+    with open(train_text_path, 'w') as f:
+        f.write('\n'.join(train))
+    
+    with open(vocab_path, 'w') as f:
+        f.write(' '.join(vocabs))
+
+    for i in range(0, len(vocabs)):
+        vocabs[i] = vocabs[i] + '\t' + ' '.join(list(vocabs[i])) + ' |'
+
+    with open(lexicon_path, 'w') as f:
+        f.write('\n'.join(vocabs))
+
+    cmd = kenlm_path_train + " -T /tmp -S 4G --discount_fallback -o " + str(ngram) +" --limit_vocab_file " + vocab_path + " trie < " + train_text_path +  ' > ' + model_arpa
+    print(f"\nExecute: {cmd}")
+    os.system(cmd)
+
+    cmd = kenlm_path_convert +' trie ' + model_arpa + ' ' + model_bin
+    print(f"\nExecute: {cmd}")
+    os.system(cmd)
+
+    cmd = kenlm_path_query + ' ' + model_bin + " < " + train_text_path + ' > ' + train_text_path_train
+    print(f"\nExecute: {cmd}")
+    os.system(cmd)
+
+    os.remove(train_text_path)
+    os.remove(train_text_path_train)
+    os.remove(model_arpa)
+    os.remove(vocab_path)
+    
 
 
 # Command: pretraining
