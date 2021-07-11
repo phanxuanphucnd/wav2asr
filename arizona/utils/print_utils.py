@@ -1,4 +1,4 @@
-from arizona_asr.version import __version__
+from arizona.version import __version__
 
 def print_name():
     print("")
