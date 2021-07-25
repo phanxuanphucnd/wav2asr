@@ -1,3 +1,8 @@
+[![PyPI - Python](https://img.shields.io/badge/python-3.6%20|%203.7%20|%203.8-blue.svg)](https://github.com/phanxuanphucnd/wav2asr)
+[![PyPI - License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/phanxuanphucnd/wav2asr/blob/main/LICENSE)
+
+<img src="docs/imgs/arizona_asr.gif" width="45%" height="45%" align="right" />
+
 ## Table of contents
 
 1. [Introduction](#introduction)
