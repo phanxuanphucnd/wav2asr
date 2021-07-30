@@ -23,6 +23,8 @@ Transfer learning is still the main technique:
 - Transfer from self-supervised models (pretrain on unlabeled data)
 - Transfer from multingual models (pretrain on multingual data)
 
+We can reference to [Documentation](https://phanxuanphucnd.github.io/wav2asr/).
+
 <img src="./docs/imgs/wav2vec_asr.png" alt="drawing" width="600"/>
 
 
